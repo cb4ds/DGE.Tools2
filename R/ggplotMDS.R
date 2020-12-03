@@ -56,13 +56,11 @@
 #' @examples
 #' \dontrun{
 #'      # Plot the first two dimensions using all genes
-#'      MyMDS = ggplotMDS(MyDGEList)
-#'      # Display the plot and save a png file.
-#'      printAndSave(MyMDS[[1]], file = "MyMDS.PNG", width = 5, height = 5)
+#'      myMDS = ggplotMDS(MyDGEList)
 #'
 #'      # Plot the 2nd and 3rd dimensions using the top 1000 genes
-#'      MyMDS = ggplotMDS (MyDGEList, dim.plot = c(2, 3) ndim = 3)
-#'      MyMDS[[1]]
+#'      myMDS = ggplotMDS(myDGEList, dim.plot = c(2, 3) ndim = 3)
+#'      myMDS[[1]]
 #' }
 #'
 #' @import ggplot2 magrittr ggrepel
