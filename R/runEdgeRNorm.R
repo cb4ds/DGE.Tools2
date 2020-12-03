@@ -76,7 +76,6 @@ runEdgeRNorm <- function(dgeObj,
             theme(axis.text.x = element_text(angle = angle, hjust = 1.0))
 
         print(nfplot)
-        printAndSave(nfplot, filename = plotFile, printPlot = FALSE)
     }
 
     return(dgeObj)
