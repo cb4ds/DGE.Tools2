@@ -2,6 +2,8 @@ context("DGEtools - tests for cdfPlot.R functions")
 
 
 test_that("cdfPlot.R: cdfPlot()", {
+    skip_if(!("RG_fit" %in% names(DGEobj1)))
+
     top_table <- topTable(DGEobj1$RG_fit, number = 100)
     test_png <- tempfile(fileext = ".png")
 
