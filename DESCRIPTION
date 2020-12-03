@@ -33,7 +33,6 @@ Imports:
     Matrix,
     matrixStats,
     methods,
-    openxlsx,
     rlang,
     statmod,
     stats,
