@@ -5,8 +5,7 @@
 #'
 #' @param dgeObj A DGEobj containing counts, design data, and gene annotation.
 #' @param normMethod One of "TMM", "RLE", "upperquartile", or "none". (Default = "TMM")
-#' @param plotFile Enable a bar plot of the norm.factors produced (Default = "Norm.Factors.PNG")
-#'   Set to NULL to disable the plot.
+#' @param plotFile Enable a bar plot of the norm.factors produced. (Default = TRUE)
 #' @param plotLabels Sample labels for the plot. Length must equal the number of
 #'   samples. (Default = NULL; sample number will be displayed)
 #'
@@ -25,7 +24,7 @@
 #' @export
 runEdgeRNorm <- function(dgeObj,
                          normMethod = "TMM",
-                         plotFile = "TMM_Norm.Factors.PNG",
+                         plotFile = TRUE,
                          plotLabels = NULL) {
 
     funArgs <- match.call()
@@ -60,7 +59,7 @@ runEdgeRNorm <- function(dgeObj,
         angle = 0
     }
 
-    if (!is.null(plotFile)) { # Bar plot of norm.factors
+    if (plotFile) { # Bar plot of norm.factors
         df <- data.frame(x = factor(x),
                          Norm.Factors = MyDGElist$samples$norm.factors)
         nfplot <- ggplot(df, aes(x = x, y = Norm.Factors)) +
