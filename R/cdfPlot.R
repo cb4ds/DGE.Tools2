@@ -14,12 +14,8 @@
 #' below 0.01 are a different color by default (threshold set by pThreshold
 #' argument; shape/color attributes customizable through other arguments).
 #'
-#' Two arguments control the output.  printPlot = TRUE outputs the compound plot
-#' to the console/knitr.  Provide a file name with a .PNG extension to save the
-#' compound plot to a PNG file.  Font sizes are increase 1.5 fold for the PNG
-#' file. The default baseFontSize = 12 produces suitable output for knitr PDFs
-#' and the 1.5 fold adjustment produces a PNG file suitable for PPT
-#' presentations.
+#' The output can be controlled using printPlot = TRUE, which outputs the compound plot
+#' to the console/knitr.
 #'
 #' \strong{Data Structure for the input dataframe:}
 #'
@@ -70,8 +66,6 @@
 #'   respectively. (Default = "grey")
 #' @param printPlot Specify printing the combined plot to the console/knitr
 #'   (Default = TRUE)
-#' @param plotFile Provide a file name with .PNG extension to save the an image
-#'   file. Font size doubled for PNG file output.
 #' @param footnote Optional string placed right justified at bottom of plot.
 #' @param footnoteSize Applies to footnote. (Default = 3)
 #' @param footnoteColor Applies to footnote. (Default = "black")
@@ -82,11 +76,10 @@
 #'
 #' @examples
 #' \dontrun{
-#'    # Plot to console and PNG file (df is a topTable dataframe)
-#'    cdfPlot(df, title = "My CDF Plot", printFile = "MyCDFplot.PNG")
+#'    # Plot to console (df is a topTable dataframe)
+#'    cdfPlot(df, title = "My CDF Plot")
 #' }
 #' @import ggplot2 magrittr
-#' @importFrom grDevices dev.off png
 #' @importFrom grid viewport
 #' @importFrom dplyr arrange left_join
 #' @importFrom assertthat assert_that
@@ -112,7 +105,6 @@ cdfPlot <- function(df,
                     themeStyle = "grey",
                     pvalMax = 0.10,
                     printPlot = TRUE,
-                    plotFile,
                     footnote,
                     footnoteSize = 3,
                     footnoteColor = "black",
@@ -285,40 +277,6 @@ cdfPlot <- function(df,
     if (printPlot == TRUE) {
         print(cdfMain)
         print(cdfInset, vp = vp)
-    }
-
-    # PNG file output
-    if (!missing(plotFile)) {
-        # Increase font size for PNG file
-        pngFontSize <- baseFontSize * 1.5
-
-        # Adjust viewport X for larger font
-        adjust <- (pngFontSize/480)
-        viewportX %<>% add(adjust)
-
-        # Adjust viewport Y if main Title present
-        vy <- viewportY
-        if (!is.null(title)) {
-            adjust <- (baseFontSize/100)
-            vy <- viewportY - adjust
-        }
-
-        # Shrink the legend by 50%
-        cdfMain <- cdfMain +
-            theme(legend.key.size = unit((7.5/pngFontSize), "lines"),
-                  legend.text = element_text(size = rel(6/pngFontSize)),
-                  legend.title = element_text(size = rel((7/pngFontSize)), face = "bold")
-            )
-
-        # A viewport taking up a fraction of the plot area (upper left)
-        vp <- grid::viewport(width = viewportWidth,
-                             height = viewportWidth,
-                             x = viewportX, y = vy,
-                             just = c("left", "top"))
-        grDevices::png(filename = plotFile, width = 6, height = 4, units = "in", res = 300)
-        print(cdfMain + baseFont(pngFontSize))
-        print(cdfInset + baseFont(pngFontSize/3), vp = vp)
-        invisible( grDevices::dev.off() )
     }
 
     MyList <- list(main = cdfMain, inset = cdfInset, viewport = vp)
