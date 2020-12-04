@@ -5,7 +5,6 @@ test_that("cdfPlot.R: cdfPlot()", {
     skip_if(!("RG_fit" %in% names(DGEobj1)))
 
     top_table <- topTable(DGEobj1$RG_fit, number = 100)
-    test_png <- tempfile(fileext = ".png")
 
     # testing plot with default values.
     plot <- cdfPlot(top_table, referenceLine = "blue")
@@ -21,7 +20,6 @@ test_that("cdfPlot.R: cdfPlot()", {
                              title         = "MyPlot",
                              themeStyle    = "bw",
                              referenceLine = "blue",
-                             plotFile      = test_png,
                              footnote      = "this is footnote of the plot")
 
     expect_s3_class(plot_with_aes$main, c("gg", "ggplot"))
@@ -33,8 +31,6 @@ test_that("cdfPlot.R: cdfPlot()", {
     expect_equal(plot_with_aes$main$layers[[2]]$geom_params$colour, "blue")
     expect_equal(plot_with_aes$main$theme$strip.background$colour, "grey20")
     expect_equal(plot_with_aes$main$layers[[3]]$geom_params$label, "this is footnote of the plot")
-    expect_true(file.exists(test_png))
-    rm(test_png) # removing temp png.
 
     expect_error({cdfPlot(top_table,pvalCol = "p.value")},
                  regexp = "Specified pvalCol not found in the supplied dataframe (df).",
