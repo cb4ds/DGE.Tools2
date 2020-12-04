@@ -56,10 +56,10 @@
 #' @examples
 #' \dontrun{
 #'      # Plot the first two dimensions using all genes
-#'      myMDS = ggplotMDS(MyDGEList)
+#'      myMDS <- ggplotMDS(MyDGEList)
 #'
 #'      # Plot the 2nd and 3rd dimensions using the top 1000 genes
-#'      myMDS = ggplotMDS(myDGEList, dim.plot = c(2, 3) ndim = 3)
+#'      myMDS <- ggplotMDS(myDGEList, dim.plot = c(2, 3) ndim = 3)
 #'      myMDS[[1]]
 #' }
 #'
@@ -67,7 +67,6 @@
 #' @importFrom assertthat assert_that
 #' @importFrom limma plotMDS
 #' @importFrom stats as.dist
-#' @importFrom methods is
 #'
 #' @export
 ggplotMDS <- function(DGEdata,
@@ -345,7 +344,7 @@ MDS_var_explained <- function(mds,
     assertthat::assert_that(!missing(mds),
                             msg = "mds is required and must be specified.")
 
-    if (!is(mds, "MDS")) {
+    if (!("MDS" %in% class(mds))) {
         mds <- limma::plotMDS(mds, plot = FALSE)
     }
 
