@@ -14,7 +14,6 @@
 #' }
 #'
 #' @importFrom assertthat assert_that
-#' @importFrom Matrix rowSums
 #' @importFrom stringr str_c
 #'
 #' @export
@@ -26,8 +25,8 @@ rsqCalc <- function(normMatrix, fit) {
                             msg = "fit must be of class 'MArrayLM'.")
     assertthat::assert_that(is.numeric(as.matrix(normMatrix)),
                             msg = "All of the entries in normMatrix must be numeric.")
-
-    sst <- Matrix::rowSums(normMatrix^2)
+    browser()
+    sst <- rowSums(normMatrix^2)
     ssr <- sst - fit$df.residual*fit$sigma^2
     return(ssr)
 }
