@@ -7,8 +7,6 @@
 plotPvalHist(
   P.Val,
   facet = TRUE,
-  savePlot = FALSE,
-  fileNames = NULL,
   binWidth = 0.02,
   baseFontSize = 12,
   facetFontSize = NULL,
@@ -21,12 +19,6 @@ plotPvalHist(
 \item{P.Val}{A matrix or dataframe of numeric data; col = samples}
 
 \item{facet}{Set to FALSE to print individual plots instead of a faceted plot. (Default = TRUE)}
-
-\item{savePlot}{TRUE saves the plot(s) to .PNG files.}
-
-\item{fileNames}{Pass a single file name for a faceted plot to save the
-plot to a file.  Pass a list of file names if facet = FALSE (length must equal
-sample count).}
 
 \item{binWidth}{Range is always 0-1 for p-values. (Default = 0.02)}
 
@@ -47,7 +39,7 @@ A ggplot2 object if facet = TRUE or a list of plots if facet = FALSE. (Default =
 }
 \description{
 Generate a facet plot (or optionally individual plots) from a dataframe of
-numbers.  Intended to perform histogram analysis of p-value distributions,
+numbers. Intended to perform histogram analysis of p-value distributions,
 but should be useful for any dataframe of numeric columns.
 }
 \examples{
@@ -56,10 +48,8 @@ but should be useful for any dataframe of numeric columns.
    MyPvalMatrix <- extractCol(getType(myDGEobj, "topTable"), "P.Value")
    plotPvalHist(MyPvalMatrix)
 
-   # Print to a PNG with some custom arguments
+   # Use some custom arguments
    myplot <- plotPvalHist(MyPValMatrix,
-                          savePlot = TRUE,
-                          fileNames = "MyPlot.PNG",
                           facetFontSize = 14)
 }
 

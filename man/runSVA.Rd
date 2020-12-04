@@ -4,7 +4,7 @@
 \alias{runSVA}
 \title{Test for surrogate variables}
 \usage{
-runSVA(dgeObj, designMatrixName, method = "leek", saveSv = FALSE)
+runSVA(dgeObj, designMatrixName, method = "leek")
 }
 \arguments{
 \item{dgeObj}{A DGEobj with normalized counts and a DesignMatrix.}
@@ -12,8 +12,6 @@ runSVA(dgeObj, designMatrixName, method = "leek", saveSv = FALSE)
 \item{designMatrixName}{The itemName of the design matrix in DGEobj.}
 
 \item{method}{Method passed to num.sv. Supports "leek" or "be". (Default = "leek")}
-
-\item{saveSv}{Save the surrogate variables in rds file. (Default = FALSE)}
 }
 \value{
 dgeObj containing a new design matrix and an updated design table.
