@@ -32,8 +32,9 @@
 #'
 #' @importFrom assertthat assert_that
 #' @importFrom dplyr left_join
+#' @importFrom stats setNames
 #' @importFrom tidyr gather
-#' @importFrom tibble rownames_to_column
+#' @importFrom tibble rownames_to_column tibble
 #'
 #' @export
 tidyIntensity <- function(intensityObj,
@@ -65,7 +66,7 @@ tidyIntensity <- function(intensityObj,
     intensityObj <- tidyr::gather(intensityObj, key = !!keyColname, value = !!valueColname, 2:xcol)
 
     # Join the group info
-    groupinfo <- tibble(keycol = samples, group = group)
-    intensityObj <- dplyr::left_join(intensityObj, groupinfo, by = rlang::set_names(nm = keyColname, "keycol"))
+    groupinfo <- tibble::tibble(keycol = samples, group = group)
+    intensityObj <- dplyr::left_join(intensityObj, groupinfo, by = stats::setNames(nm = keyColname, "keycol"))
     return(intensityObj)
 }
