@@ -4,20 +4,14 @@
 \alias{runEdgeRNorm}
 \title{Run edgeR TMM normalization on DGEobj}
 \usage{
-runEdgeRNorm(
-  dgeObj,
-  normMethod = "TMM",
-  plotFile = "TMM_Norm.Factors.PNG",
-  plotLabels = NULL
-)
+runEdgeRNorm(dgeObj, normMethod = "TMM", plotFile = TRUE, plotLabels = NULL)
 }
 \arguments{
 \item{dgeObj}{A DGEobj containing counts, design data, and gene annotation.}
 
 \item{normMethod}{One of "TMM", "RLE", "upperquartile", or "none". (Default = "TMM")}
 
-\item{plotFile}{Enable a bar plot of the norm.factors produced (Default = "Norm.Factors.PNG")
-Set to NULL to disable the plot.}
+\item{plotFile}{Enable a bar plot of the norm.factors produced. (Default = TRUE)}
 
 \item{plotLabels}{Sample labels for the plot. Length must equal the number of
 samples. (Default = NULL; sample number will be displayed)}

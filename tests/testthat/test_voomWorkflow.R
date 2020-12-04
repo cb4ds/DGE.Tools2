@@ -19,20 +19,17 @@ test_that('voomWorkflow.R: voomWorkflow()', {
                                 countThreshold    = 10,
                                 zfpkmThreshold    = -3)
     expect_s3_class(voom_dgeObj, "DGEobj")
-    file.remove("TMM_Norm.Factors.PNG")
 
     # testing Voom/lmFit
     dupcorBlock <- rep(1:6, 8)
     voom_dgeObj <- voomWorkflow(dgeObj            = dgeObj,
                                 formula           = "~ 0 + ReplicateGroup",
                                 designMatrixName  = "DM",
-                                outputPath        = "png/",
                                 proteinCodingOnly = TRUE,
                                 dupCorBlock       = dupcorBlock,
                                 countThreshold    = 10,
                                 tpmThreshold      = 5)
     expect_s3_class(voom_dgeObj, "DGEobj")
-    unlink("png", recursive = TRUE)
 
     # testing assert statements
     expect_error(voomWorkflow(dgeObj = NULL),

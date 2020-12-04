@@ -19,7 +19,6 @@
 #' @param designMatrixName User defined name for the design matrix.
 #' @param dupCorBlock A blocking vector to define which samples belong to the
 #'   same subject to be used with the duplicateCorrelation function.
-#' @param outputPath Where to send output plots.
 #' @param annotationFile Text file of key/value pairs to populate DGEobj
 #'   attributes. (Optional but highly advised)
 #' @param proteinCodingOnly Set to TRUE to keep only protein coding genes.
@@ -55,7 +54,6 @@ voomWorkflow <- function(dgeObj,
                          formula,
                          designMatrixName,
                          dupCorBlock,
-                         outputPath = "./",
                          annotationFile,
                          proteinCodingOnly = FALSE,
                          sampleFraction = 0.5,
@@ -82,11 +80,6 @@ voomWorkflow <- function(dgeObj,
     # Add project metadata
     if (!missing(annotationFile)) {
         dgeObj <- DGEobj::annotateDGEobj(dgeObj, annotations = annotationFile)
-    }
-
-    # Check for and create output folder if needed
-    if (outputPath != "./" & !file.exists(outputPath)) {
-        dir.create(file.path(outputPath))
     }
 
     # Filter out genes with any zero efflength
@@ -157,8 +150,8 @@ voomWorkflow <- function(dgeObj,
     # Run DGE calculations
     # Normalize
     dgeObj <- runEdgeRNorm(dgeObj,
-                           plotFile = file.path(outputPath, "TMM_Norm.Factors.PNG"),
-                           normMethod = "TMM")
+                           normMethod = "TMM",
+                           plotFile = FALSE)
 
     message("Running Voom... this takes some time...")
     # Voom/lmFit

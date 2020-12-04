@@ -25,7 +25,6 @@ Imports:
     dplyr (>= 0.8.0),
     ggplot2 (>= 3.0.0),
     ggrepel,
-    grDevices,
     grid,
     gridExtra,
     igraph,

@@ -9,7 +9,6 @@ voomWorkflow(
   formula,
   designMatrixName,
   dupCorBlock,
-  outputPath = "./",
   annotationFile,
   proteinCodingOnly = FALSE,
   sampleFraction = 0.5,
@@ -27,8 +26,6 @@ character, not formula.)}
 
 \item{dupCorBlock}{A blocking vector to define which samples belong to the
 same subject to be used with the duplicateCorrelation function.}
-
-\item{outputPath}{Where to send output plots.}
 
 \item{annotationFile}{Text file of key/value pairs to populate DGEobj
 attributes. (Optional but highly advised)}

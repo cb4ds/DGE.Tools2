@@ -8,7 +8,6 @@
 #' @param dgeObj A DGEobj with normalized counts and a DesignMatrix.
 #' @param designMatrixName The itemName of the design matrix in DGEobj.
 #' @param method Method passed to num.sv. Supports "leek" or "be". (Default = "leek")
-#' @param saveSv Save the surrogate variables in rds file. (Default = FALSE)
 #'
 #' @return dgeObj containing a new design matrix and an updated design table.
 #'
@@ -24,7 +23,9 @@
 #' @importFrom stats model.matrix as.formula
 #'
 #' @export
-runSVA <- function(dgeObj, designMatrixName, method = "leek", saveSv = FALSE){
+runSVA <- function(dgeObj,
+                   designMatrixName,
+                   method = "leek") {
 
     assertthat::assert_that(!missing(dgeObj),
                             "DGEobj" %in% class(dgeObj),
@@ -61,10 +62,6 @@ runSVA <- function(dgeObj, designMatrixName, method = "leek", saveSv = FALSE){
 
         # Capture the function call
         FunArgs <- match.call()
-        # Save the svobj
-        if (saveSv) {
-            saveRDS(svobj, "svobj.RDS")
-        }
 
         dgeObj <- addItem(dgeObj, svobj, paste(designMatrixName, "_svobj", sep = ""),
                           "svobj",

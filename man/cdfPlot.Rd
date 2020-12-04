@@ -27,7 +27,6 @@ cdfPlot(
   themeStyle = "grey",
   pvalMax = 0.1,
   printPlot = TRUE,
-  plotFile,
   footnote,
   footnoteSize = 3,
   footnoteColor = "black",
@@ -94,9 +93,6 @@ respectively. (Default = "grey")}
 \item{printPlot}{Specify printing the combined plot to the console/knitr
 (Default = TRUE)}
 
-\item{plotFile}{Provide a file name with .PNG extension to save the an image
-file. Font size doubled for PNG file output.}
-
 \item{footnote}{Optional string placed right justified at bottom of plot.}
 
 \item{footnoteSize}{Applies to footnote. (Default = 3)}
@@ -125,12 +121,8 @@ whole p-value scale and highlights the portion shown in the full plot. Points
 below 0.01 are a different color by default (threshold set by pThreshold
 argument; shape/color attributes customizable through other arguments).
 
-Two arguments control the output.  printPlot = TRUE outputs the compound plot
-to the console/knitr.  Provide a file name with a .PNG extension to save the
-compound plot to a PNG file.  Font sizes are increase 1.5 fold for the PNG
-file. The default baseFontSize = 12 produces suitable output for knitr PDFs
-and the 1.5 fold adjustment produces a PNG file suitable for PPT
-presentations.
+The output can be controlled using printPlot = TRUE, which outputs the compound plot
+to the console/knitr.
 
 \strong{Data Structure for the input dataframe:}
 
@@ -146,7 +138,7 @@ this order: Significant, Not Significant.
 }
 \examples{
 \dontrun{
-   # Plot to console and PNG file (df is a topTable dataframe)
-   cdfPlot(df, title = "My CDF Plot", printFile = "MyCDFplot.PNG")
+   # Plot to console (df is a topTable dataframe)
+   cdfPlot(df, title = "My CDF Plot")
 }
 }
