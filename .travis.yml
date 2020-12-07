@@ -14,8 +14,6 @@ bioc_packages:
   - RNASeqPower
   - sva
   - zFPKM
-r_github_packages:
-  - cb4ds/DGEobj@cran
 r_packages:
   - covr
 after_success:
