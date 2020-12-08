@@ -2,9 +2,10 @@ context("DGEtools - tests for plotPValHist.R functions")
 
 
 test_that("plotPValHist.R: plotPvalHist()", {
+    skip_if(is.null(t_obj1$DGEList))
 
     # testing plotPvalHist with savePlot and facet = TRUE
-    pvalMatrix <- extractCol(getType(DGEobj1, "topTable"), "P.Value")
+    pvalMatrix <- extractCol(getType(t_obj1, "topTable"), "P.Value")
     pval_plot <- plotPvalHist(pvalMatrix, facetFontSize = 14)
     expect_s3_class(pval_plot, c("gg","ggplot"))
 

@@ -12,8 +12,6 @@ runContrasts(
   runTopTable = TRUE,
   runTopTreat = FALSE,
   foldChangeThreshold = 1.5,
-  pValueThreshold = 0.01,
-  FDRthreshold = 0.1,
   runEBayes = TRUE,
   robust = TRUE,
   proportion = 0.01,
@@ -39,10 +37,6 @@ to "fitName_cf".,Should only be changed to create 2 or more contrast sets from t
 ]== (Default = FALSE)}
 
 \item{foldChangeThreshold}{Only applies to topTreat (Default = 1.5)}
-
-\item{pValueThreshold}{Default = 0.01}
-
-\item{FDRthreshold}{Default = 0.1}
 
 \item{runEBayes}{Runs eBayes after contrast.fit (Default = TRUE)}
 

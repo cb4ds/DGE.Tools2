@@ -2,8 +2,11 @@ context("DGEtools - tests for runContrasts.R functions")
 
 
 test_that('runContrasts.R: runContrasts()', {
-    dgeObj <- DGEobj1
-    contrastList <- getType(DGEobj1, "topTable")
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
+    skip_if(is.null(t_obj1$RG))
+
+    dgeObj <- t_obj1
+    contrastList <- getType(dgeObj, "topTable")
     names(contrastList) <- colnames(dgeObj$RG)[-1]
 
     dgeObj_output <- runContrasts(dgeObj              = dgeObj,
@@ -35,11 +38,6 @@ test_that('runContrasts.R: runContrasts()', {
                               contrastList        = contrastList,
                               foldChangeThreshold = -1),
                  regexp = "foldChangeThreshold must be greater than or equal to 0.")
-    expect_error(runContrasts(dgeObj              = dgeObj,
-                              designMatrixName    = "RG",
-                              contrastList        = contrastList,
-                              pValueThreshold     = 2),
-                 regexp = "pValueThreshold must be between 0 and 1.")
     expect_error(runContrasts(dgeObj              = dgeObj,
                               designMatrixName    = "RG",
                               contrastList        = contrastList,

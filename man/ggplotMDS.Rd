@@ -118,10 +118,17 @@ input data.
 \examples{
 \dontrun{
      # Plot the first two dimensions using all genes
+<<<<<<< HEAD
      myMDS <- ggplotMDS(MyDGEList)
 
      # Plot the 2nd and 3rd dimensions using the top 1000 genes
      myMDS <- ggplotMDS(myDGEList, dim.plot = c(2, 3) ndim = 3)
+=======
+     myMDS = ggplotMDS(MyDGEList)
+
+     # Plot the 2nd and 3rd dimensions using the top 1000 genes
+     myMDS = ggplotMDS(myDGEList, dim.plot = c(2, 3) ndim = 3)
+>>>>>>> upstream/develop
      myMDS[[1]]
 }
 

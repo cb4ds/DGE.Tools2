@@ -2,9 +2,10 @@ context("DGEtools - tests for topTable.merge.R functions")
 
 
 test_that("topTable.merge.R: topTable.merge()", {
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
 
     # creating toptables list
-    ttList         <- getType(DGEobj1, "topTable")
+    ttList         <- getType(t_obj1, "topTable")
     contrast_table <- topTable.merge(ttlist = ttList, digits = 2)
     expect_setequal(object = colnames(contrast_table),
                     expected = apply(X        = expand.grid(c("logFC", "AveExpr", "P.Value", "adj.P.Val"), names(ttList)),

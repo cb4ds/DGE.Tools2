@@ -254,10 +254,6 @@ tpm.direct <- function(counts,
 
 # Helper Functions
 calcCPM <- function(counts, log, normalize, prior.count){
-    if (nrow(counts) < 10000) {
-        warning('You should use the whole dataset when calculating CPM, not a subset.')
-    }
-
     counts %>%
         edgeR::DGEList() %>%
         edgeR::calcNormFactors(method = normalize) %>%
@@ -265,10 +261,6 @@ calcCPM <- function(counts, log, normalize, prior.count){
 }
 
 calcFPKM <- function(counts, log, normalize, geneLength, prior.count){
-    if (nrow(counts) < 10000) {
-        warning('You should use the whole dataset when calculating FPKM, not a subset.')
-    }
-
     counts %>%
         edgeR::DGEList() %>%
         edgeR::calcNormFactors(method = normalize) %>%
@@ -276,9 +268,6 @@ calcFPKM <- function(counts, log, normalize, geneLength, prior.count){
 }
 
 calcTPM <- function(counts, log, normalize, geneLength, prior.count){
-    if (nrow(counts) < 10000) {
-        warning('You should use the whole dataset when calculating TPM, not a subset.')
-    }
     if (normalize != "none") {
         warning(paste('TPM normalization overides', normalize, 'normalization!'))
     }
@@ -319,4 +308,3 @@ calcFPK <- function(counts, log, normalize, geneLength, prior.count){
 
     return(FPK)
 }
-

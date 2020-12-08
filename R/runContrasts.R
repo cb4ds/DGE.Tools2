@@ -36,8 +36,6 @@
 #' @param foldChangeThreshold Only applies to topTreat (Default = 1.5)
 #' @param runEBayes Runs eBayes after contrast.fit (Default = TRUE)
 #' @param robust eBayes robust option (Default = TRUE)
-#' @param pValueThreshold Default = 0.01
-#' @param FDRthreshold Default = 0.1
 #' @param proportion Proportion of genes expected to be differentially expressed.
 #'   (used by eBayes) (Default = 0.01)
 #' @param qValue Set TRUE to include Q-values in topTable output. (Default = FALSE)
@@ -74,8 +72,6 @@ runContrasts <- function(dgeObj,
                          runTopTable = TRUE,
                          runTopTreat = FALSE,
                          foldChangeThreshold = 1.5,
-                         pValueThreshold = 0.01,
-                         FDRthreshold = 0.1,
                          runEBayes = TRUE,
                          robust = TRUE,
                          proportion = 0.01,
@@ -94,8 +90,6 @@ runContrasts <- function(dgeObj,
                             msg = "contrastList must specified and must be a named list.")
     assertthat::assert_that(foldChangeThreshold >= 0,
                             msg = "foldChangeThreshold must be greater than or equal to 0.")
-    assertthat::assert_that(pValueThreshold > 0 & pValueThreshold <= 1,
-                            msg = "pValueThreshold must be between 0 and 1.")
     assertthat::assert_that(!(runTopTable == FALSE & runTopTreat == FALSE),
                             msg = "One of runTopTable or runTopTreat must be TRUE.")
     assertthat::assert_that(designMatrixName %in% names(dgeObj),

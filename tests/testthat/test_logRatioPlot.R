@@ -2,12 +2,14 @@ context("DGEtools - tests for logRatioPlot.R functions")
 
 
 test_that("logRatioPlot.R: logRatioPlot()", {
-    tidyDat <- tidyContrasts(DGEobj1,
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
+
+    tidyDat <- tidyContrasts(t_obj1,
                              rownameColumn = "EnsgID",
                              includeColumns = c("logFC", "CI.R", "CI.L"))
 
     # Add gene symbols from geneData and select small set of genes for plotting
-    ens2genesym <- DGEobj1$geneData %>%
+    ens2genesym <- t_obj1$geneData %>%
         rownames_to_column(var = "EnsgID") %>%
         select(EnsgID, GeneSymbol = GeneName)
     tidyDat <- left_join(tidyDat, ens2genesym) %>% head(10)
