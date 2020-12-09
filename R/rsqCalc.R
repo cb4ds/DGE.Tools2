@@ -25,7 +25,7 @@ rsqCalc <- function(normMatrix, fit) {
                             msg = "fit must be of class 'MArrayLM'.")
     assertthat::assert_that(is.numeric(as.matrix(normMatrix)),
                             msg = "All of the entries in normMatrix must be numeric.")
-    browser()
+
     sst <- rowSums(normMatrix^2)
     ssr <- sst - fit$df.residual*fit$sigma^2
     return(ssr)
