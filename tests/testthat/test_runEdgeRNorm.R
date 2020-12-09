@@ -20,7 +20,7 @@ test_that('runEdgeRNorm: runEdgeRNorm()', {
     expect_equal(length(runEdgeRNorm_two_test_DGEList$DGEList), 2)
     expect_equal(names(runEdgeRNorm_two_test_DGEList$DGEList), c("counts", "samples"))
 
-    runEdgeRNorm_three_test <- runEdgeRNorm(DGEobj1_minus_DGElist)
+    runEdgeRNorm_three_test <- runEdgeRNorm(t_obj1)
     runEdgeRNorm_three_test_DGEList <- getType(runEdgeRNorm_three_test, "DGEList")
 
     expect_s3_class(runEdgeRNorm_three_test, "DGEobj")
