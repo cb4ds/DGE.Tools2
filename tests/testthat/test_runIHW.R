@@ -4,9 +4,9 @@ context("DGEtools - tests for runIHW.R functions")
 test_that('runIHW: runIHW()', {
     suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
 
-    runIHW_ttList <- getType(t_obj1, "topTable")[1:2]
+    runIHW_contrastList <- getType(t_obj1, "topTable")[1:2]
 
-    runIHW_test_one <- runIHW(runIHW_ttList)
+    runIHW_test_one <- runIHW(runIHW_contrastList)
 
     expect_true(is.list(runIHW_test_one))
     expect_equal(length(runIHW_test_one), 2)

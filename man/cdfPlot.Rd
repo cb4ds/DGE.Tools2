@@ -5,7 +5,7 @@
 \title{Create deluxe CDF Plots}
 \usage{
 cdfPlot(
-  df,
+  contrastDF,
   pvalCol = "P.Value",
   pThreshold = 0.01,
   xlab = NULL,
@@ -34,7 +34,7 @@ cdfPlot(
 )
 }
 \arguments{
-\item{df}{A dataframe with LogRatio and LogIntensity columns and optionally a p-value or FDR column.}
+\item{contrastDF}{A dataframe with LogRatio and LogIntensity columns and optionally a p-value or FDR column.}
 
 \item{pvalCol}{Name of the p-value or FDR column (Default = "P.Value")}
 
@@ -138,7 +138,7 @@ this order: Significant, Not Significant.
 }
 \examples{
 \dontrun{
-   # Plot to console (df is a topTable dataframe)
-   cdfPlot(df, title = "My CDF Plot")
+   # Plot to console (contrastDF is a topTable dataframe)
+   cdfPlot(contrastDF, title = "My CDF Plot")
 }
 }

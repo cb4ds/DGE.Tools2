@@ -9,11 +9,11 @@ test_that("plotDispersion.R: plotDispersion()", {
     designMatrix <- stats::model.matrix(~ 0 + ReplicateGroup, getItem(t_obj1, "design"))
 
     # testing with input DGEList
-    plot_disp <- plotDispersion(dispersionObj = dgelist, designMatrix = designMatrix)
+    plot_disp <- plotDispersion(DGEdata = dgelist, designMatrix = designMatrix)
     expect_s3_class(plot_disp, c("gg", "ggplot"))
 
     # testing with input countMatrix
-    plot_disp <- plotDispersion(dispersionObj = t_obj1$counts,
+    plot_disp <- plotDispersion(DGEdata       = t_obj1$counts,
                                 designMatrix  = designMatrix,
                                 lineFit       = "loess",
                                 rugColor      = "red",
@@ -22,7 +22,7 @@ test_that("plotDispersion.R: plotDispersion()", {
 
     # testing assert statements
     expect_error(plotDispersion(),
-                 regexp = "dispersionObj must be specified.")
-    expect_error(plotDispersion(dispersionObj = t_obj1$counts),
+                 regexp = "DGEdata must be specified.")
+    expect_error(plotDispersion(DGEdata = t_obj1$counts),
                  regexp = "argument \"designMatrix\" is missing, with no default")
 })

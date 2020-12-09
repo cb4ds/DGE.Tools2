@@ -6,15 +6,15 @@
 #' Outputs a ggplot2 object faceted by the facetColname or a list of individual
 #' ggplots, one for each facetColname value (typically gene).
 #'
-#' @param data A tidy dataframe of data to plot (Required) (see ?tidyContrasts).
+#' @param contrastsDF A tidy dataframe of data to plot (Required) (see ?tidyContrasts).
 #' @param facetColname Define the column name to separate plots (Required) (e.g. GeneID).
 #' @param xColname Define the column name to group boxplots by (Required) (e.g. Contrast).
 #' @param yColname Define the column name for the output of the boxplots (Default = "logFC")
 #' @param CI.R_colname Define name of the CI high value (Default = "CI.R")
 #' @param CI.L_colname Define name of the CI low value (Default =  "CI.L")
 #' @param xOrder Define the order for the groups in each plot.  Should
-#'   contain values in unique(data$group) listed in the order that
-#'   groups should appear in the plot. (Optional; Default = unique(data[xColname]))
+#'   contain values in unique(contrastsDF$group) listed in the order that
+#'   groups should appear in the plot. (Optional; Default = unique(contrastsDF[xColname]))
 #' @param plotType One of "bar" or "point" (Default = "bar")
 #' @param refLine Adds a horizontal line at y = 0 (Default = TRUE)
 #' @param refLineColor Color for the reference line (Default = "red")
@@ -45,7 +45,7 @@
 #' @param facet Specifies whether to facet (TRUE) or print individual plots
 #'   (FALSE)  (Default = TRUE)
 #' @param facetCol Explicitly set the number of rows for the facet plot. Default
-#'   behavior will automatically set the columns. (Default = ceiling(sqrt(length(unique(data[facetCol])))))
+#'   behavior will automatically set the columns. (Default = ceiling(sqrt(length(unique(contrastsDF[facetCol])))))
 #' @param xAngle Angle to set the sample labels on the X axis (Default =  45; Range = 0-90)
 #' @param scales Specify same scales or independent scales for each subplot (Default = "free_y";
 #'   Allowed values: "fixed", "free_x", "free_y", "free")
@@ -57,7 +57,7 @@
 #' @examples
 #' \dontrun{
 #'   # DGEobj example
-#'   # Put contrasts in tidy format keeping logFC, and confidence limits data
+#'   # Put contrasts in tidy format keeping logFC, and confidence limits contrastsDF
 #'   tidyDat <- tidyContrasts(DGEobj,
 #'                            rownameColumn = "EnsgID",
 #'                            includeColumns = c("logFC", "CI.R", "CI.L"))
@@ -98,13 +98,13 @@
 #' @importFrom stringr str_c
 #'
 #' @export
-logRatioPlot <- function(data,
+logRatioPlot <- function(contrastsDF,
                          facetColname,
                          xColname,
                          yColname = "logFC",
                          CI.R_colname = "CI.R",
                          CI.L_colname = "CI.L",
-                         xOrder = unique(as.character(data[xColname, , drop = TRUE])),
+                         xOrder = unique(as.character(contrastsDF[xColname, , drop = TRUE])),
                          plotType = "bar",
                          refLine = TRUE,
                          refLineColor = "red",
@@ -152,7 +152,7 @@ logRatioPlot <- function(data,
         }
 
         # Add error bars if columns present
-        if (all(c(CI.L_colname, CI.R_colname) %in% colnames(data) )) {
+        if (all(c(CI.L_colname, CI.R_colname) %in% colnames(contrastsDF) )) {
             myPlot <- myPlot + geom_errorbar(aes_string(ymin = CI.L_colname, ymax = CI.R_colname), width = .2)
         } else {
             warning("Confidence limits columns not found.")
@@ -170,27 +170,27 @@ logRatioPlot <- function(data,
         return(myPlot)
     }
 
-    assertthat::assert_that(!missing(data),
-                            "data.frame" %in% class(data),
+    assertthat::assert_that(!missing(contrastsDF),
+                            "data.frame" %in% class(contrastsDF),
                             msg = "data must be specified and should be of class 'data.frame'.")
-    assertthat::assert_that(facetColname %in% colnames(data),
+    assertthat::assert_that(facetColname %in% colnames(contrastsDF),
                             msg = "facetColname must be included in the colnames of data.")
-    assertthat::assert_that(xColname %in% colnames(data),
+    assertthat::assert_that(xColname %in% colnames(contrastsDF),
                             msg = "xColname must be included in the colnames of data.")
-    assertthat::assert_that(yColname %in% colnames(data),
+    assertthat::assert_that(yColname %in% colnames(contrastsDF),
                             msg = "yColname must be included in the colnames of data.")
-    assertthat::assert_that(all(xOrder %in% as.character(data[xColname, , drop = TRUE])))
+    assertthat::assert_that(all(xOrder %in% as.character(contrastsDF[xColname, , drop = TRUE])))
 
     # Plot code here
     if (facet) {
         # Set facet columns to sqrt of unique observations (rounded up)
         if (missing(facetCol)) {
-            numcol <- data[facetCol] %>% unique %>% length %>% sqrt %>% ceiling
+            numcol <- contrastsDF[facetCol] %>% unique %>% length %>% sqrt %>% ceiling
         } else {
             numcol = facetCol
         }
 
-        myPlot <- ggplot2::ggplot(data, aes_string(x = xColname, y = yColname))
+        myPlot <- ggplot2::ggplot(contrastsDF, aes_string(x = xColname, y = yColname))
         myPlot <- .addGeoms(myPlot)
         facetFormula <- stringr::str_c("~", facetColname, sep = " ")
         myPlot <- myPlot + ggplot2::facet_wrap(facetFormula, ncol = numcol, scales = scales)
@@ -220,9 +220,9 @@ logRatioPlot <- function(data,
 
         plotlist <- list()
 
-        for (obs in unique(data[[facetColname]])) { # For each gene
+        for (obs in unique(contrastsDF[[facetColname]])) { # For each gene
 
-            dat <- data[data[[facetColname]] == obs, ] # Pull data for one gene
+            dat <- contrastsDF[contrastsDF[[facetColname]] == obs, ] # Pull data for one gene
 
             aplot <- ggplot(dat, aes_string(x = xColname, y = yColname)) + # Samples vs Log2CPM
                 xlab(xlab) +

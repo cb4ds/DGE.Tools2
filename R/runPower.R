@@ -11,7 +11,7 @@
 #' thresholds.  If return = "plots" or "both", a list is returned with two
 #' ggplots (plots) or the plots plus the dataframe (both).
 #'
-#' @param counts A counts matrix. (Required)
+#' @param countsMatrix A counts matrix. (Required)
 #' @param designMatrix A design matrix. (Required)
 #' @param depth A set of depth to use in the calculations.  The default depths of
 #'        c(10, 100, 1000) respectively represent a detection limit, below average
@@ -26,7 +26,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'    myPowerResults <- runPower(counts, designMatrix)
+#'    myPowerResults <- runPower(countsMatrix, designMatrix)
 #' }
 #'
 #' @import magrittr
@@ -36,7 +36,7 @@
 #' @importFrom stats approx
 #'
 #' @export
-runPower <- function(counts,
+runPower <- function(countsMatrix,
                      designMatrix,
                      depth = c(10, 100, 1000),
                      N = c(3, 6, 10, 20),
@@ -46,7 +46,7 @@ runPower <- function(counts,
 
     # Fit the BCV data and define the BCV for each depth requested.
     # Estimate dispersion
-    dgelist <- counts %>%
+    dgelist <- countsMatrix %>%
         as.matrix() %>%
         edgeR::DGEList() %>%
         edgeR::calcNormFactors() %>%

@@ -7,7 +7,7 @@
 #' Normalization is performed by edgeR::calcNormFactors. Note TMM is specifically tailored to count-based
 #' data.  Thus this function is only appropriate for count-based data.
 #'
-#' @param dat  A DGEobj or counts matrix.
+#' @param DGEdata  A DGEobj or counts matrix.
 #' @param plotType  One of "box" or "density." (Default = "box")
 #' @param normalize Default = "TMM" and invokes TMM normalization. Other allowed
 #'   values are: "RLE", "upperquartile", or "none". Invokes edgeR::calcNormFactors for
@@ -29,21 +29,21 @@
 #' @importFrom assertthat assert_that
 #'
 #' @export
-plotNorm <- function(dat,
+plotNorm <- function(DGEdata,
                      plotType = "box",
                      normalize = "tmm") {
 
-    assertthat::assert_that(any(c("matrix", "DGEobj") %in% class(dat)),
-                            msg = "dat must be of either class 'matrix' or 'DGEobj'.")
+    assertthat::assert_that(any(c("matrix", "DGEobj") %in% class(DGEdata)),
+                            msg = "DGEdata must be of either class 'matrix' or 'DGEobj'.")
     assertthat::assert_that(tolower(plotType) %in% c("box", "density"),
                             msg = "plotType must be one of 'box' or 'density'.")
     assertthat::assert_that(tolower(normalize) %in% c("tmm", "rle", "upperquartile", "none"),
                             msg = "normalize must be one of 'TMM', 'RLE', 'upperquartile', or 'none'.")
 
-    if ("matrix" %in% class(dat)) {
-        counts <- dat
+    if ("matrix" %in% class(DGEdata)) {
+        counts <- DGEdata
     } else {
-        counts <- DGEobj::getItem(dat, "counts")
+        counts <- DGEobj::getItem(DGEdata, "counts")
     }
 
     log2cpm <- convertCounts(counts, unit = "cpm", log = TRUE, normalize = "none")

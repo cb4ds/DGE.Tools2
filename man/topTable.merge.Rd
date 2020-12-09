@@ -5,13 +5,13 @@
 \title{Merge specified topTable df cols}
 \usage{
 topTable.merge(
-  ttlist,
+  contrastList,
   colNames = c("logFC", "AveExpr", "P.Value", "adj.P.Val"),
   digits = c(2, 2, 4, 3)
 )
 }
 \arguments{
-\item{ttlist}{A named list of topTable data.frames which all have the same colnames and same row counts.
+\item{contrastList}{A named list of topTable data.frames which all have the same colnames and same row counts.
 The dataframes in the list should have rownames (geneIDs).}
 
 \item{colNames}{The list of column names of the data column to extract to a

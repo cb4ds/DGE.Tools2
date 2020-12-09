@@ -5,7 +5,7 @@
 \title{Run a power analysis on counts and design matrix}
 \usage{
 runPower(
-  counts,
+  countsMatrix,
   designMatrix,
   depth = c(10, 100, 1000),
   N = c(3, 6, 10, 20),
@@ -15,7 +15,7 @@ runPower(
 )
 }
 \arguments{
-\item{counts}{A counts matrix. (Required)}
+\item{countsMatrix}{A counts matrix. (Required)}
 
 \item{designMatrix}{A design matrix. (Required)}
 
@@ -50,7 +50,7 @@ ggplots (plots) or the plots plus the dataframe (both).
 }
 \examples{
 \dontrun{
-   myPowerResults <- runPower(counts, designMatrix)
+   myPowerResults <- runPower(countsMatrix, designMatrix)
 }
 
 }

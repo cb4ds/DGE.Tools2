@@ -36,7 +36,7 @@
 #' required for these arguments which applies the attributes in this order:
 #' Increased, NoChange, Decreased.
 #'
-#' @param df Dataframe with LogIntensity and LogRatio columns and optionally a p-value or FDR column.
+#' @param contrastDF Dataframe with LogIntensity and LogRatio columns and optionally a p-value or FDR column.
 #' @param logRatioCol Name of the LogRatio column (Default = "logFC")
 #' @param logIntCol Name of the LogIntensity column (Default = "AveExpr")
 #' @param pvalCol Name of the p-value or FDR column (Default = "P.Value")
@@ -44,8 +44,8 @@
 #' @param ylab Y axis label (Defaults to the LogRatio column name)
 #' @param title Plot title (optional)
 #' @param pthreshold Used to color points (Default = 0.01)
-#' @param geneSymLabels Labels for gene symbols in df.
-#' @param geneSymCol Name of the gene symbol column in df.  The gene symbol is
+#' @param geneSymLabels Labels for gene symbols in contrastDF.
+#' @param geneSymCol Name of the gene symbol column in contrastDF.  The gene symbol is
 #'    not in topTable output by default so the user has to bind this column
 #'    to the dataframe in advance.  Then this column will be used to label
 #'    significantly changed points.
@@ -94,11 +94,11 @@
 #'
 #' @examples
 #' \dontrun{
-#'    # Simple plot with custom title(df is a topTable dataframe)
-#'    myPlot <- profilePlot(df, title = "Plot Title")
+#'    # Simple plot with custom title(contrastDF is a topTable dataframe)
+#'    myPlot <- profilePlot(contrastDF, title = "Plot Title")
 #'
 #'    # Some options with a custom datafile
-#'    myPlot <- profilePlot(df,
+#'    myPlot <- profilePlot(contrastDF,
 #'                          pthreshold = 0.1,
 #'                          logRatioCol = "Log2ratio",
 #'                          logIntCol = "AverageIntensity",
@@ -115,7 +115,7 @@
 #' @importFrom ggrepel geom_text_repel
 #'
 #' @export
-profilePlot <- function(df,
+profilePlot <- function(contrastDF,
                         logRatioCol = "logFC",
                         logIntCol = "AveExpr",
                         pvalCol = "P.Value",
@@ -145,15 +145,15 @@ profilePlot <- function(df,
                         footnoteJust = 1) {
 
     # Make sure specified columns exist
-    assertthat::assert_that(logRatioCol %in% colnames(df),
-                            msg = "logRatioCol column not found in df.")
-    assertthat::assert_that(logIntCol %in% colnames(df),
-                            msg = "logIntCol column not found in df.")
-    assertthat::assert_that(pvalCol %in% colnames(df),
-                            msg = "pvalCol column not found in df.")
+    assertthat::assert_that(logRatioCol %in% colnames(contrastDF),
+                            msg = "logRatioCol column not found in contrastDF.")
+    assertthat::assert_that(logIntCol %in% colnames(contrastDF),
+                            msg = "logIntCol column not found in contrastDF.")
+    assertthat::assert_that(pvalCol %in% colnames(contrastDF),
+                            msg = "pvalCol column not found in contrastDF.")
     if (!missing(geneSymCol)) {
-        assertthat::assert_that(geneSymCol %in% colnames(df),
-                                msg = "geneSymCol column not found in df.")
+        assertthat::assert_that(geneSymCol %in% colnames(contrastDF),
+                                msg = "geneSymCol column not found in contrastDF.")
     }
     if (!missing(symbolSize) || !missing(symbolShape) || !missing(symbolColor) || !missing(symbolFill)) {
         assertthat::assert_that(!length(symbolSize) == 3,
@@ -182,34 +182,34 @@ profilePlot <- function(df,
     xlabel = logIntCol
     ylabel = logRatioCol
     # Now make the columnames suitable for use with aes_string
-    x = make.names(colnames(df)[colnames(df) == logIntCol])
-    y = make.names(colnames(df)[colnames(df) == logRatioCol])
-    colnames(df)[colnames(df) == logIntCol] = make.names(colnames(df)[colnames(df) == logIntCol])
-    colnames(df)[colnames(df) == logRatioCol] = make.names(colnames(df)[colnames(df) == logRatioCol])
+    x = make.names(colnames(contrastDF)[colnames(contrastDF) == logIntCol])
+    y = make.names(colnames(contrastDF)[colnames(contrastDF) == logRatioCol])
+    colnames(contrastDF)[colnames(contrastDF) == logIntCol] = make.names(colnames(contrastDF)[colnames(contrastDF) == logIntCol])
+    colnames(contrastDF)[colnames(contrastDF) == logRatioCol] = make.names(colnames(contrastDF)[colnames(contrastDF) == logRatioCol])
 
     # Need a NLP column for sizing
     if (sizeBySignificance == TRUE) {
-        df$negLog10P = -log10(df[[pvalCol]])
+        contrastDF$negLog10P = -log10(contrastDF[[pvalCol]])
     }
 
-    DEup <- df[[pvalCol]] <= pthreshold & df[[logRatioCol]] > 0
-    DEdn <- df[[pvalCol]] <= pthreshold & df[[logRatioCol]] < 0
+    DEup <- contrastDF[[pvalCol]] <= pthreshold & contrastDF[[logRatioCol]] > 0
+    DEdn <- contrastDF[[pvalCol]] <= pthreshold & contrastDF[[logRatioCol]] < 0
     DEnot <- !DEup & !DEdn
-    # Create group factor column in df
-    df$group <- NA
-    df$group[DEup] <- "Increased"
-    df$group[DEdn] <- "Decreased"
-    df$group[DEnot] <- "No Change"
-    df %<>% dplyr::left_join(ssc)
-    df$group %<>% factor(levels = c("Increased", "Decreased", "No Change"))
+    # Create group factor column in contrastDF
+    contrastDF$group <- NA
+    contrastDF$group[DEup] <- "Increased"
+    contrastDF$group[DEdn] <- "Decreased"
+    contrastDF$group[DEnot] <- "No Change"
+    contrastDF %<>% dplyr::left_join(ssc)
+    contrastDF$group %<>% factor(levels = c("Increased", "Decreased", "No Change"))
 
     # Set an order field to force plotting of NoChange first
-    df$order <- NA
-    df$order[DEup] <- 1
-    df$order[DEdn] <- 1
-    df$order[DEnot] <- 0
+    contrastDF$order <- NA
+    contrastDF$order[DEup] <- 1
+    contrastDF$order[DEdn] <- 1
+    contrastDF$order[DEnot] <- 0
 
-    profilePlot <- ggplot(df, aes_string(x = x, y = y)) +
+    profilePlot <- ggplot(contrastDF, aes_string(x = x, y = y)) +
         aes(shape = group,
             size = group,
             color = group,
@@ -228,7 +228,7 @@ profilePlot <- function(df,
 
     # Optional Decorations
     if (!is.null(rugColor)) {
-        profilePlot <- profilePlot + geom_rug(data = df,
+        profilePlot <- profilePlot + geom_rug(data = contrastDF,
                                               inherit.aes = FALSE,
                                               color = rugColor,
                                               alpha = rugAlpha,
@@ -274,10 +274,10 @@ profilePlot <- function(df,
 
     # Add genesym labels to increased, decreased genes
     if (!missing(geneSymLabels) & !missing(geneSymCol)) {
-        idx <- df[[geneSymCol]] %in% geneSymLabels
-        dfsubset <- df[idx,]
+        idx <- contrastDF[[geneSymCol]] %in% geneSymLabels
+        contrastDFsubset <- contrastDF[idx,]
         profilePlot <- profilePlot +
-            geom_text_repel(data = dfsubset,
+            geom_text_repel(data = contrastDFsubset,
                             aes_string(x = x, y = y, label = geneSymCol),
                             show.legend = FALSE)
     }

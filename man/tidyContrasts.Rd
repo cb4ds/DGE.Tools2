@@ -4,10 +4,10 @@
 \alias{tidyContrasts}
 \title{Create tidy contrast list of topTable contrast dfs}
 \usage{
-tidyContrasts(contrastObj, rownameColumn = "rownames", includeColumns)
+tidyContrasts(DGEdata, rownameColumn = "rownames", includeColumns)
 }
 \arguments{
-\item{contrastObj}{A DGEobj or named list of contrast dataframes. (Required)}
+\item{DGEdata}{A DGEobj or named list of contrast dataframes. (Required)}
 
 \item{rownameColumn}{Name of the rowname column. If a column by this
 name does not exist, it is created from the rownames property.}

@@ -22,12 +22,12 @@ test_that('tidyContrasts: tidyContrasts()', {
                                  includeColumns = c("rownames", "logFC", "CI.L", "CI.R")),
                    regexp = "Some requested columns are not present in all dataframes.")
 
-    expect_error(tidyContrasts(contrastObj_test),
-                 regexp = "object 'contrastObj_test' not found")
+    expect_error(tidyContrasts(dgeObj_test),
+                 regexp = "object 'dgeObj_test' not found")
 })
 
 
 test_that('tidyContrasts: incorrect usage', {
     expect_error(tidyContrasts(),
-                 regexp = "argument \"contrastObj\" is missing, with no default")
+                 regexp = "argument \"DGEdata\" is missing, with no default")
 })

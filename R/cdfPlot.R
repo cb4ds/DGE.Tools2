@@ -29,7 +29,7 @@
 #' is required for these arguments which applies the attributes in
 #' this order: Significant, Not Significant.
 #'
-#' @param df A dataframe with LogRatio and LogIntensity columns and optionally a p-value or FDR column.
+#' @param contrastDF A dataframe with LogRatio and LogIntensity columns and optionally a p-value or FDR column.
 #' @param pvalCol Name of the p-value or FDR column (Default = "P.Value")
 #' @param pvalMax Limit the range of the main plot (Default = 0.10)
 #' @param pThreshold Used to color points (default = 0.01)
@@ -76,8 +76,8 @@
 #'
 #' @examples
 #' \dontrun{
-#'    # Plot to console (df is a topTable dataframe)
-#'    cdfPlot(df, title = "My CDF Plot")
+#'    # Plot to console (contrastDF is a topTable dataframe)
+#'    cdfPlot(contrastDF, title = "My CDF Plot")
 #' }
 #' @import ggplot2 magrittr
 #' @importFrom grid viewport
@@ -85,7 +85,7 @@
 #' @importFrom assertthat assert_that
 #'
 #' @export
-cdfPlot <- function(df,
+cdfPlot <- function(contrastDF,
                     pvalCol = "P.Value",
                     pThreshold = 0.01,
                     xlab = NULL, ylab = NULL,
@@ -111,8 +111,8 @@ cdfPlot <- function(df,
                     footnoteJust = 1
 ) {
 
-    assertthat::assert_that(pvalCol %in% colnames(df),
-                            msg = "Specified pvalCol not found in the supplied dataframe (df).")
+    assertthat::assert_that(pvalCol %in% colnames(contrastDF),
+                            msg = "Specified pvalCol not found in the supplied dataframe (contrastDF).")
 
     if (!missing(symbolSize) || !missing(symbolShape) || !missing(symbolColor) || !missing(symbolFill)) {
         assertthat::assert_that(!length(symbolSize) == 2,
@@ -145,31 +145,31 @@ cdfPlot <- function(df,
 
     # Combo PLOT: full data inset, most significant data in main plot
     # Rank by p-value
-    df %<>% dplyr::arrange(!!sym(pvalCol))
-    df$Rank <- c(1:nrow(df))
+    contrastDF %<>% dplyr::arrange(!!sym(pvalCol))
+    contrastDF$Rank <- c(1:nrow(contrastDF))
 
     # Let's plot the p-value subsets
-    Sig <- df[[pvalCol]] <= pThreshold
-    NotSig <- df[[pvalCol]] > pThreshold
+    Sig <- contrastDF[[pvalCol]] <= pThreshold
+    NotSig <- contrastDF[[pvalCol]] > pThreshold
 
-    # Create group factor column in df
-    df$group <- NA
-    df$group[Sig] <- "Significant"
-    df$group[NotSig] <- "Not Significant"
-    df %<>% dplyr::left_join(ssc)
-    df$group %<>% factor(levels = c("Significant", "Not Significant"))
+    # Create group factor column in contrastDF
+    contrastDF$group <- NA
+    contrastDF$group[Sig] <- "Significant"
+    contrastDF$group[NotSig] <- "Not Significant"
+    contrastDF %<>% dplyr::left_join(ssc)
+    contrastDF$group %<>% factor(levels = c("Significant", "Not Significant"))
 
     # Set an order field to force plotting of NotSig first
-    df$order <- NA
-    df$order[NotSig] <- 1
-    df$order[Sig] <- 2
+    contrastDF$order <- NA
+    contrastDF$order[NotSig] <- 1
+    contrastDF$order[Sig] <- 2
 
     # Rows to include in the zoomed in plot
-    subsetRows <- sum(df[[y]] <= pvalMax)
-    dfsubset <- df[1:subsetRows,]
+    subsetRows <- sum(contrastDF[[y]] <= pvalMax)
+    contrastDFsubset <- contrastDF[1:subsetRows,]
 
     # Plot subset percent of the data for the main plot
-    cdfMain <- ggplot(dfsubset, aes_string(x = x, y = y)) +
+    cdfMain <- ggplot(contrastDFsubset, aes_string(x = x, y = y)) +
         aes(shape = group, size = group, color = group, fill = group, order = order) +
         # Scale lines tell it to use the actual values, not treat them as factors
         scale_shape_manual(name = "Group", guide = "legend", labels = ssc$group, values = ssc$symbolShape) +
@@ -219,7 +219,7 @@ cdfPlot <- function(df,
     }
 
     # Set up the inset plot with All Data
-    cdfInset <- ggplot(df, aes_string(x = x, y = y)) +
+    cdfInset <- ggplot(contrastDF, aes_string(x = x, y = y)) +
         aes(shape = group, size = group,
             color = group, fill = group,
             order = order) +

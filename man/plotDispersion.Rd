@@ -5,7 +5,7 @@
 \title{Plot edgeR dispersion from a DGEobj}
 \usage{
 plotDispersion(
-  dispersionObj,
+  DGEdata,
   designMatrix,
   plotType = "dispersion",
   symbolSize = 1,
@@ -24,7 +24,7 @@ plotDispersion(
 )
 }
 \arguments{
-\item{dispersionObj}{Counts matrix or DGEList (Required)}
+\item{DGEdata}{Counts matrix or DGEList (Required)}
 
 \item{designMatrix}{A design matrix created by stats::model.matrix (Required)}
 

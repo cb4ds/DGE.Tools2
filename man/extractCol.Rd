@@ -4,10 +4,10 @@
 \alias{extractCol}
 \title{Extract a named column from a series of df or matrices}
 \usage{
-extractCol(dfList, colName, robust = TRUE)
+extractCol(contrastList, colName, robust = TRUE)
 }
 \arguments{
-\item{dfList}{A list of data.frames which all have the same colnames and same row counts.
+\item{contrastList}{A list of data.frames which all have the same colnames and same row counts.
 The dataframes in the list should have rownames(geneIDs).}
 
 \item{colName}{The name of the data column to extract into a matrix.}

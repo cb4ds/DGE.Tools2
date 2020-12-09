@@ -6,13 +6,13 @@
 #' for the conversion to TPM which is converted from FPKM using the formula provided
 #' by [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
 #'
-#' geneLength is a vector where length(geneLength) == nrow(counts). If a RSE effectiveLength
+#' geneLength is a vector where length(geneLength) == nrow(countsMatrix). If a RSE effectiveLength
 #' matrix is passed as input, rowMeans(effectiveLength) is used (because edgeR functions
 #' only accept a vector for effectiveLength).
 #'
 #' Note that log2 values for CPM, TPM, and FPKM employ edgeR's prior.count handling to avoid divide by zero.
 #'
-#' @param counts A numeric matrix or dataframe of N genes x M Samples.  All columns
+#' @param countsMatrix A numeric matrix or dataframe of N genes x M Samples.  All columns
 #' must be numeric.
 #' @param unit  Required. One of CPM, FPKM, FPK or TPM.
 #' @param geneLength A vector or matrix of gene lengths. Required for length-normalized units (TPM, FPKM or FPK).
@@ -48,15 +48,15 @@
 #' @importFrom assertthat assert_that
 #'
 #' @export
-convertCounts <- function(counts,
+convertCounts <- function(countsMatrix,
                           unit,
                           geneLength,
                           log = FALSE,
                           normalize = "none",
                           prior.count = NULL) {
 
-    assertthat::assert_that(!(nrow(counts) == 0),
-                            msg = "counts must be specified.")
+    assertthat::assert_that(!(nrow(countsMatrix) == 0),
+                            msg = "countsMatrix must be specified.")
     assertthat::assert_that(!is.null(unit),
                             msg = "unit must be specified.")
 
@@ -82,15 +82,15 @@ convertCounts <- function(counts,
     }
 
 
-    # Coerce counts to a matrix
-    result <- counts <- as.matrix(counts)
-    assertthat::assert_that("matrix" %in% class(counts),
-                            msg = "counts must be able to be coerced to a matrix.")
+    # Coerce countsMatrix to a matrix
+    result <- countsMatrix <- as.matrix(countsMatrix)
+    assertthat::assert_that("matrix" %in% class(countsMatrix),
+                            msg = "countsMatrix must be able to be coerced to a matrix.")
 
     # Make sure geneLength is correct length
     if (!missing(geneLength)) {
-        assertthat::assert_that(length(geneLength) == nrow(counts),
-                                msg = "geneLength must be the same length of the number of rows in counts.")
+        assertthat::assert_that(length(geneLength) == nrow(countsMatrix),
+                                msg = "geneLength must be the same length of the number of rows in countsMatrix.")
     }
 
     # Set defaults
@@ -122,10 +122,10 @@ convertCounts <- function(counts,
     }
 
     result <- switch(toupper(unit),
-                     "CPM" = calcCPM(counts, log, normalize, prior.count),
-                     "FPKM" = calcFPKM(counts, log, normalize, geneLength, prior.count),
-                     "FPK" = calcFPK(counts, log, normalize, geneLength, prior.count),
-                     "TPM" = calcTPM(counts, log, normalize, geneLength, prior.count)
+                     "CPM"  = calcCPM(countsMatrix,  log, normalize, prior.count),
+                     "FPKM" = calcFPKM(countsMatrix, log, normalize, geneLength, prior.count),
+                     "FPK"  = calcFPK(countsMatrix,  log, normalize, geneLength, prior.count),
+                     "TPM"  = calcTPM(countsMatrix,  log, normalize, geneLength, prior.count)
     )
     return(result)
 }
@@ -193,17 +193,17 @@ tpm.on.subset <- function(dgeObj, applyFilter = TRUE){
 }
 
 
-#' Convert counts and geneLength to TPM units
+#' Convert countsMatrix and geneLength to TPM units
 #'
-#' Takes a counts and geneLength as input and converts to TPM units using the equation from
+#' Takes a countsMatrix and geneLength as input and converts to TPM units using the equation from
 #' [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
 #'
 #' The result should be the same as using convertCounts with normalize = 'tpm' and log = FALSE.
 #'
-#' geneLength can be a vector (length == nrow(counts)) or a matrix (same dim as counts).
+#' geneLength can be a vector (length == nrow(countsMatrix)) or a matrix (same dim as countsMatrix).
 #' The geneLength is used as is, or optionally collapsed to a vector by rowMeans.
 #'
-#' @param counts A numeric matrix of N genes x M samples. All columns must be numeric.
+#' @param countsMatrix A numeric matrix of N genes x M samples. All columns must be numeric.
 #' @param geneLength Numeric matrix of gene lengths. Often the ExonLength item of a DGEobj.
 #' @param collapse Default = FALSE. TRUE or FALSE determines whether to use rowMeans on the geneLength matrix.
 #'
@@ -219,26 +219,26 @@ tpm.on.subset <- function(dgeObj, applyFilter = TRUE){
 #' @importFrom assertthat assert_that
 #'
 #' @export
-tpm.direct <- function(counts,
+tpm.direct <- function(countsMatrix,
                        geneLength,
                        collapse = FALSE) {
 
-    if (!is.matrix(counts)) {
-        result <- counts <- as.matrix(counts)
+    if (!is.matrix(countsMatrix)) {
+        result <- countsMatrix <- as.matrix(countsMatrix)
         assertthat::assert_that("matrix" %in% class(result),
-                                msg = "counts must be able to be coerced to a matrix.")
+                                msg = "countsMatrix must be able to be coerced to a matrix.")
     }
 
     if (is.vector(geneLength)) {
-        assertthat::assert_that(length(geneLength) == nrow(counts),
-                                msg = "geneLength should be of the same length as the number of rows in counts.")
+        assertthat::assert_that(length(geneLength) == nrow(countsMatrix),
+                                msg = "geneLength should be of the same length as the number of rows in countsMatrix.")
     } else {
         if (!is.matrix(geneLength)) {
             result <- geneLength <- as.matrix(geneLength)
             assertthat::assert_that("matrix" %in% class(result),
                                     msg = "geneLength must be able to be coerced to a matrix.")
-            assertthat::assert_that(all(dim(counts) == dim(geneLength)),
-                                    msg = "The dimensions of counts and geneLength should match.")
+            assertthat::assert_that(all(dim(countsMatrix) == dim(geneLength)),
+                                    msg = "The dimensions of countsMatrix and geneLength should match.")
         }
     }
 
@@ -247,27 +247,27 @@ tpm.direct <- function(counts,
     }
 
     # Calculation  (fpk / colsum(fpk) ) * 10e6
-    fpb <- counts / geneLength
+    fpb <- countsMatrix / geneLength
     sumfpb <- colSums(fpb)
     tpm <- fpb / edgeR::expandAsMatrix(sumfpb, byrow = TRUE, dim = dim(fpb)) * 1e6
 }
 
 # Helper Functions
-calcCPM <- function(counts, log, normalize, prior.count){
-    counts %>%
+calcCPM <- function(countsMatrix, log, normalize, prior.count){
+    countsMatrix %>%
         edgeR::DGEList() %>%
         edgeR::calcNormFactors(method = normalize) %>%
         edgeR::cpm(log = log, prior.count = prior.count)
 }
 
-calcFPKM <- function(counts, log, normalize, geneLength, prior.count){
-    counts %>%
+calcFPKM <- function(countsMatrix, log, normalize, geneLength, prior.count){
+    countsMatrix %>%
         edgeR::DGEList() %>%
         edgeR::calcNormFactors(method = normalize) %>%
         edgeR::rpkm(log = log, gene.length = geneLength, prior.count = prior.count)
 }
 
-calcTPM <- function(counts, log, normalize, geneLength, prior.count){
+calcTPM <- function(countsMatrix, log, normalize, geneLength, prior.count){
     if (normalize != "none") {
         warning(paste('TPM normalization overides', normalize, 'normalization!'))
     }
@@ -275,7 +275,7 @@ calcTPM <- function(counts, log, normalize, geneLength, prior.count){
         warning("Using a prior.count for logTPM calculations is not recommended and may produce unpredictable results!")
     }
 
-    fpkm <- calcFPKM(counts, log = log, normalize = normalize,
+    fpkm <- calcFPKM(countsMatrix, log = log, normalize = normalize,
                      geneLength = geneLength, prior.count = prior.count)
 
     # Helper function
@@ -292,14 +292,14 @@ calcTPM <- function(counts, log, normalize, geneLength, prior.count){
     return(TPM)
 }
 
-calcFPK <- function(counts, log, normalize, geneLength, prior.count){
+calcFPK <- function(countsMatrix, log, normalize, geneLength, prior.count){
     if (tolower(normalize) == 'none') {
         # Check for zero geneLength just in case
         if (min(geneLength) == 0) {
             geneLength <- geneLength + 1
         }
 
-        FPK <- counts / (geneLength / 1000)
+        FPK <- countsMatrix / (geneLength / 1000)
 
         if (log == TRUE) {
             FPK <- log2(FPK + prior.count)

@@ -5,13 +5,13 @@
 \title{Plot logRatio contrasts}
 \usage{
 logRatioPlot(
-  data,
+  contrastsDF,
   facetColname,
   xColname,
   yColname = "logFC",
   CI.R_colname = "CI.R",
   CI.L_colname = "CI.L",
-  xOrder = unique(as.character(data[xColname, , drop = TRUE])),
+  xOrder = unique(as.character(contrastsDF[xColname, , drop = TRUE])),
   plotType = "bar",
   refLine = TRUE,
   refLineColor = "red",
@@ -42,7 +42,7 @@ logRatioPlot(
 )
 }
 \arguments{
-\item{data}{A tidy dataframe of data to plot (Required) (see ?tidyContrasts).}
+\item{contrastsDF}{A tidy dataframe of data to plot (Required) (see ?tidyContrasts).}
 
 \item{facetColname}{Define the column name to separate plots (Required) (e.g. GeneID).}
 
@@ -55,8 +55,8 @@ logRatioPlot(
 \item{CI.L_colname}{Define name of the CI low value (Default =  "CI.L")}
 
 \item{xOrder}{Define the order for the groups in each plot.  Should
-contain values in unique(data$group) listed in the order that
-groups should appear in the plot. (Optional; Default = unique(data[xColname]))}
+contain values in unique(contrastsDF$group) listed in the order that
+groups should appear in the plot. (Optional; Default = unique(contrastsDF[xColname]))}
 
 \item{plotType}{One of "bar" or "point" (Default = "bar")}
 
@@ -112,7 +112,7 @@ respectively. (Default = "bw")}
 (FALSE)  (Default = TRUE)}
 
 \item{facetCol}{Explicitly set the number of rows for the facet plot. Default
-behavior will automatically set the columns. (Default = ceiling(sqrt(length(unique(data[facetCol])))))}
+behavior will automatically set the columns. (Default = ceiling(sqrt(length(unique(contrastsDF[facetCol])))))}
 
 \item{xAngle}{Angle to set the sample labels on the X axis (Default =  45; Range = 0-90)}
 
@@ -134,7 +134,7 @@ ggplots, one for each facetColname value (typically gene).
 \examples{
 \dontrun{
   # DGEobj example
-  # Put contrasts in tidy format keeping logFC, and confidence limits data
+  # Put contrasts in tidy format keeping logFC, and confidence limits contrastsDF
   tidyDat <- tidyContrasts(DGEobj,
                            rownameColumn = "EnsgID",
                            includeColumns = c("logFC", "CI.R", "CI.L"))

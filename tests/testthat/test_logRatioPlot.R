@@ -15,14 +15,14 @@ test_that("logRatioPlot.R: logRatioPlot()", {
     tidyDat <- left_join(tidyDat, ens2genesym) %>% head(10)
 
     # Simple barplot
-    log_ratio_plot <- logRatioPlot(data         = tidyDat,
+    log_ratio_plot <- logRatioPlot(contrastsDF  = tidyDat,
                                    facetColname = "GeneSymbol",
                                    xColname     = "Contrast",
                                    facetCol     = 2)
     expect_s3_class(log_ratio_plot, c("gg", "ggplot"))
 
     # Lineplot with some options
-    log_ratio_plot <- logRatioPlot(data         = tidyDat,
+    log_ratio_plot <- logRatioPlot(contrastsDF  = tidyDat,
                                    plotType     = "point",
                                    facetColname = "GeneSymbol",
                                    xColname     = "Contrast",
@@ -37,13 +37,13 @@ test_that("logRatioPlot.R: logRatioPlot()", {
     expect_type(log_ratio_plot, "list")
     expect_s3_class(log_ratio_plot[[1]], c("gg", "ggplot"))
 
-    expect_error(logRatioPlot(data         = tidyDat,
+    expect_error(logRatioPlot(contrastsDF  = tidyDat,
                               facetColname = "GeneSymbol",
                               xColname     = "Contrast",
                               facetCol     = 2,
                               plotType     = "heatmap"),
                  regexp = "plotType must be either 'bar' or 'point'.")
-    expect_warning(logRatioPlot(data         = tidyDat,
+    expect_warning(logRatioPlot(contrastsDF  = tidyDat,
                                 facetColname = "GeneSymbol",
                                 xColname     = "Contrast",
                                 facetCol     = 2 ,

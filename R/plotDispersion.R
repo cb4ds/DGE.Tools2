@@ -5,7 +5,7 @@
 #' the plot can instead be Biological Coefficient of Variation (BCV is the square root of
 #' dispersion) against AveLogCPM.
 #'
-#' @param dispersionObj Counts matrix or DGEList (Required)
+#' @param DGEdata Counts matrix or DGEList (Required)
 #' @param designMatrix A design matrix created by stats::model.matrix (Required)
 #' @param plotType One of "dispersion" or "BCV" (Default = "dispersion")
 #' @param symbolSize (Default = 1)
@@ -37,7 +37,7 @@
 #' @importFrom edgeR calcNormFactors estimateDisp DGEList
 #'
 #' @export
-plotDispersion <- function(dispersionObj,
+plotDispersion <- function(DGEdata,
                            designMatrix,
                            plotType = "dispersion",
                            symbolSize = 1,
@@ -54,19 +54,19 @@ plotDispersion <- function(dispersionObj,
                            rugAlpha = 0.02,
                            ...) {
 
-    assertthat::assert_that(!missing(dispersionObj),
-                            msg = "dispersionObj must be specified.")
+    assertthat::assert_that(!missing(DGEdata),
+                            msg = "DGEdata must be specified.")
     if (!missing(designMatrix)) {
         assertthat::assert_that("matrix" %in% class(designMatrix),
                                 msg = "designMatrix must be specified and should be of class 'matrix'.")
     }
 
-    if (class(dispersionObj)[[1]] == "DGEList") {
-        dgelist <- dispersionObj %>%
+    if (class(DGEdata)[[1]] == "DGEList") {
+        dgelist <- DGEdata %>%
             edgeR::calcNormFactors() %>%
             edgeR::estimateDisp(design = designMatrix, robust = TRUE, ...)
     } else {
-        dgelist <- dispersionObj %>%  # Process a counts matrix
+        dgelist <- DGEdata %>%  # Process a counts matrix
             as.matrix %>%
             edgeR::DGEList() %>%
             edgeR::calcNormFactors() %>%

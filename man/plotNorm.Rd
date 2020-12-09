@@ -4,10 +4,10 @@
 \alias{plotNorm}
 \title{Plot log2CPM before and after normalization}
 \usage{
-plotNorm(dat, plotType = "box", normalize = "tmm")
+plotNorm(DGEdata, plotType = "box", normalize = "tmm")
 }
 \arguments{
-\item{dat}{A DGEobj or counts matrix.}
+\item{DGEdata}{A DGEobj or counts matrix.}
 
 \item{plotType}{One of "box" or "density." (Default = "box")}
 

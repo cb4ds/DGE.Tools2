@@ -3,15 +3,15 @@ context("DGEtools - tests for extractCol.R functions")
 test_that('extractCol: extractCol()', {
     suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
 
-    extractCol_ttList <- getType(t_obj1, "topTable")[1:2]
-    extractCol_one_test <- extractCol(extractCol_ttList, colName = "P.Value")
+    extractCol_contrastList <- getType(t_obj1, "topTable")[1:2]
+    extractCol_one_test <- extractCol(extractCol_contrastList, colName = "P.Value")
 
     expect_true(is.data.frame(extractCol_one_test))
     expect_equal(nrow(extractCol_one_test), 11709)
     expect_equal(ncol(extractCol_one_test), 2)
     expect_equal(names(extractCol_one_test), c("BMTL", "BMTH"))
 
-    extractCol_two_test <- extractCol(extractCol_ttList, colName = "P.Value", robust = FALSE)
+    extractCol_two_test <- extractCol(extractCol_contrastList, colName = "P.Value", robust = FALSE)
 
     expect_true(is.data.frame(extractCol_two_test))
     expect_equal(nrow(extractCol_two_test), 11709)
@@ -25,5 +25,5 @@ test_that('extractCol: extractCol()', {
 
 test_that('extractCol: incorrect usage', {
     expect_error(extractCol(),
-                 regexp = "argument \"dfList\" is missing, with no default")
+                 regexp = "argument \"contrastList\" is missing, with no default")
 })

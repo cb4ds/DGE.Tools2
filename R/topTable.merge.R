@@ -4,7 +4,7 @@
 #' columns. Should work on any named list of dataframes where each member of the list
 #' has the same columns.
 #'
-#' @param ttlist A named list of topTable data.frames which all have the same colnames and same row counts.
+#' @param contrastList A named list of topTable data.frames which all have the same colnames and same row counts.
 #' The dataframes in the list should have rownames (geneIDs).
 #' @param colNames The list of column names of the data column to extract to a
 #'   matrix (Default = c("logFC", "AveExpr", "P.Value", "adj.P.Val"))
@@ -25,18 +25,18 @@
 #' @importFrom dplyr left_join
 #'
 #' @export
-topTable.merge <- function(ttlist,
+topTable.merge <- function(contrastList,
                            colNames = c("logFC",
                                         "AveExpr",
                                         "P.Value",
                                         "adj.P.Val"),
                            digits = c(2, 2, 4, 3)) {
 
-    assertthat::assert_that(!missing(ttlist),
-                            "list" %in% class(ttlist),
-                            "data.frame" %in% class(ttlist[[1]]),
-                            !is.null(names(ttlist)),
-                            msg = "ttlist must be specified, be of class 'list' and be a named list specifically, and include items of class 'data.frame'.")
+    assertthat::assert_that(!missing(contrastList),
+                            "list" %in% class(contrastList),
+                            "data.frame" %in% class(contrastList[[1]]),
+                            !is.null(names(contrastList)),
+                            msg = "contrastList must be specified, be of class 'list' and be a named list specifically, and include items of class 'data.frame'.")
     assertthat::assert_that(length(digits) %in% c(1, length(colNames)),
                             msg = "digits must be either of length 1 or the same length as colNames.")
 
@@ -45,10 +45,10 @@ topTable.merge <- function(ttlist,
     }
 
     # Add contrast suffix to each colname
-    contrastNames <- names(ttlist)
+    contrastNames <- names(contrastList)
 
     # Get the first set of columns
-    dat <- extractCol(ttlist, colName = colNames[1], robust = TRUE) %>%
+    dat <- extractCol(contrastList, colName = colNames[1], robust = TRUE) %>%
         as.data.frame
     colnames(dat) <- stringr::str_c(colNames[1], "_", colnames(dat))
     dat <- round(dat, digits[1])
@@ -56,7 +56,7 @@ topTable.merge <- function(ttlist,
 
     if (length(colNames)  > 1) {
         for (i in 1:length(colNames)) {
-            dat2 <- extractCol(ttlist, colName = colNames[i], robust = TRUE) %>%
+            dat2 <- extractCol(contrastList, colName = colNames[i], robust = TRUE) %>%
                 as.data.frame
             # Add datatype as prefix on colname e.g. logFC_contrastname
             colnames(dat2) <- stringr::str_c(colNames[i], "_", colnames(dat2))

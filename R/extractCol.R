@@ -13,7 +13,7 @@
 #' verified that each dataframe in the input list has the same row count
 #' and row order.
 #'
-#' @param dfList A list of data.frames which all have the same colnames and same row counts.
+#' @param contrastList A list of data.frames which all have the same colnames and same row counts.
 #' The dataframes in the list should have rownames(geneIDs).
 #' @param colName The name of the data column to extract into a matrix.
 #' @param robust Default = TRUE; TRUE forces use of a joins to merge columns
@@ -31,41 +31,41 @@
 #' }
 #'
 #' @export
-extractCol <- function(dfList, colName, robust = TRUE){
+extractCol <- function(contrastList, colName, robust = TRUE){
     ifelse(robust,
-           return(.extractCol2(dfList, colName)),
-           return(.extractCol1(dfList, colName))
+           return(.extractCol2(contrastList, colName)),
+           return(.extractCol1(contrastList, colName))
     )
 }
 
 
 # Helper functions
-.extractCol1 <- function(dfList, colName){
-    assertthat::assert_that("list" %in% class(dfList),
-                            !is.null(names(dfList)),
-                            msg = "dfList must be a named list.")
+.extractCol1 <- function(contrastList, colName){
+    assertthat::assert_that("list" %in% class(contrastList),
+                            !is.null(names(contrastList)),
+                            msg = "contrastList must be a named list.")
     assertthat::assert_that("character" %in% class(colName),
                             msg = "colName must be a column in the data of class 'character'.")
 
-    MyMatrix = lapply(dfList, `[[`, colName) %>% do.call(what = cbind)
+    MyMatrix = lapply(contrastList, `[[`, colName) %>% do.call(what = cbind)
     # Get gene ids from first df
-    rownames(MyMatrix) <- rownames(dfList[[1]])
+    rownames(MyMatrix) <- rownames(contrastList[[1]])
     # Transfer the contrast names
-    colnames(MyMatrix) <- names(dfList)
+    colnames(MyMatrix) <- names(contrastList)
     return(as.data.frame(MyMatrix))
 }
 
 
-.extractCol2 <- function(dfList, colName){
+.extractCol2 <- function(contrastList, colName){
     # Support combining topTable data from different DGEobjs
-    assertthat::assert_that("list" %in% class(dfList),
-                            !is.null(names(dfList)),
-                            msg = "dfList must be a named list.")
+    assertthat::assert_that("list" %in% class(contrastList),
+                            !is.null(names(contrastList)),
+                            msg = "contrastList must be a named list.")
     assertthat::assert_that("character" %in% class(colName),
                             msg = "colName must be a column in the data of class 'character'.")
 
-    for (i in 1:length(dfList)) {
-        newdat <- dfList[[i]] %>%
+    for (i in 1:length(contrastList)) {
+        newdat <- contrastList[[i]] %>%
             tibble::rownames_to_column(var = "rowid") %>%
             dplyr::select(rowid, colName)
 
@@ -76,6 +76,6 @@ extractCol <- function(dfList, colName, robust = TRUE){
         }
     }
     dat %<>% tibble::column_to_rownames(var = "rowid")
-    colnames(dat) <- names(dfList)
+    colnames(dat) <- names(contrastList)
     return(dat)
 }

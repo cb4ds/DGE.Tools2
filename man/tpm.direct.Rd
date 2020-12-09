@@ -2,12 +2,12 @@
 % Please edit documentation in R/convertCounts.R
 \name{tpm.direct}
 \alias{tpm.direct}
-\title{Convert counts and geneLength to TPM units}
+\title{Convert countsMatrix and geneLength to TPM units}
 \usage{
-tpm.direct(counts, geneLength, collapse = FALSE)
+tpm.direct(countsMatrix, geneLength, collapse = FALSE)
 }
 \arguments{
-\item{counts}{A numeric matrix of N genes x M samples. All columns must be numeric.}
+\item{countsMatrix}{A numeric matrix of N genes x M samples. All columns must be numeric.}
 
 \item{geneLength}{Numeric matrix of gene lengths. Often the ExonLength item of a DGEobj.}
 
@@ -17,13 +17,13 @@ tpm.direct(counts, geneLength, collapse = FALSE)
 A matrix of TPM values
 }
 \description{
-Takes a counts and geneLength as input and converts to TPM units using the equation from
+Takes a countsMatrix and geneLength as input and converts to TPM units using the equation from
 [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
 }
 \details{
 The result should be the same as using convertCounts with normalize = 'tpm' and log = FALSE.
 
-geneLength can be a vector (length == nrow(counts)) or a matrix (same dim as counts).
+geneLength can be a vector (length == nrow(countsMatrix)) or a matrix (same dim as countsMatrix).
 The geneLength is used as is, or optionally collapsed to a vector by rowMeans.
 }
 \examples{

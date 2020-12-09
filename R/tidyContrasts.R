@@ -11,7 +11,7 @@
 #'
 #' The contrast names will be used as a new column in the tidy output format.
 #'
-#' @param contrastObj A DGEobj or named list of contrast dataframes. (Required)
+#' @param DGEdata A DGEobj or named list of contrast dataframes. (Required)
 #' @param rownameColumn Name of the rowname column. If a column by this
 #'   name does not exist, it is created from the rownames property.
 #' @param includeColumns A character vector of columns to include in the output.
@@ -34,39 +34,38 @@
 #' @importFrom DGEobj getType
 #'
 #' @export
-tidyContrasts <- function(contrastObj,
+tidyContrasts <- function(DGEdata,
                           rownameColumn = "rownames",
                           includeColumns) {
 
-    assertthat::assert_that(any(c("DGEobj", "list") %in% class(contrastObj)),
-                            msg = "contrastObj must be of class 'DGEobj' or 'list'.")
+    assertthat::assert_that(any(c("DGEobj", "list") %in% class(DGEdata)),
+                            msg = "DGEdata must be of class 'DGEobj' or 'list'.")
 
-    if ("DGEobj" %in% class(contrastObj)) {
-        dgeObj <- contrastObj
-        contrastObj <- DGEobj::getType(dgeObj, "topTable")
-        assertthat::assert_that(!(length(contrastObj) == 0),
-                                msg = "No topTable dataframes found in dgeObj. Please specify a dgeObj that contains topTable dataframes.")
+    if ("DGEobj" %in% class(DGEdata)) {
+        DGEdata <- DGEobj::getType(DGEdata, "topTable")
+        assertthat::assert_that(!(length(DGEdata) == 0),
+                                msg = "No topTable dataframes found in DGEdata. Please specify a DGEdata that contains topTable dataframes.")
 
-    }  # contrastObj is now a contrastlist
+    }
 
     # Make sure list contains only dataframes
-    assertthat::assert_that(all(sapply(contrastObj, class) == "data.frame"),
-                            msg = "contrastObj must only contain dataframes.")
+    assertthat::assert_that(all(sapply(DGEdata, class) == "data.frame"),
+                            msg = "DGEdata must only contain dataframes.")
 
     # Make sure each df has a name
-    minNameLen <- min(sapply(names(contrastObj), nchar))
+    minNameLen <- min(sapply(names(DGEdata), nchar))
     assertthat::assert_that(!(minNameLen == 0),
-                            msg = "All dataframes in contrastObj must be named (it must be a named list.)")
+                            msg = "All dataframes in DGEdata must be named (it must be a named list.)")
 
     # Set default columns
     if (missing(includeColumns)) {
-        includeColumns <- colnames(contrastObj[[1]])
+        includeColumns <- colnames(DGEdata[[1]])
     }
 
     # Find the common set of columns present in all dataframes
-    commonColumns <- colnames(contrastObj[[1]])
-    for (i in 2:length(contrastObj))
-        commonColumns <- intersect(commonColumns, colnames(contrastObj[[i]]))
+    commonColumns <- colnames(DGEdata[[1]])
+    for (i in 2:length(DGEdata))
+        commonColumns <- intersect(commonColumns, colnames(DGEdata[[i]]))
 
     # Make sure user-requested columns are present
     if (!all(includeColumns %in% commonColumns)) {
@@ -75,23 +74,23 @@ tidyContrasts <- function(contrastObj,
     commonColumns <- intersect(commonColumns, includeColumns)
 
     # Does the rownameColumn exist in df1?
-    if (!rownameColumn %in% colnames(contrastObj[[1]])) {
+    if (!rownameColumn %in% colnames(DGEdata[[1]])) {
         # Move rownames to rownameColumn
-        contrastObj <- lapply(contrastObj, rownames_to_column, var = rownameColumn)
+        DGEdata <- lapply(DGEdata, rownames_to_column, var = rownameColumn)
         commonColumns <- c(rownameColumn, commonColumns)
     }
 
     # Reduce all dataframes to the selected columns
     # This also insures same column order in each df
-    contrastObj <- lapply(contrastObj, select, commonColumns)
+    DGEdata <- lapply(DGEdata, select, commonColumns)
 
     # Add a contrast name column to each DF
-    for (name in names(contrastObj)) {
-        contrastObj[[name]]["Contrast"] <- name
+    for (name in names(DGEdata)) {
+        DGEdata[[name]]["Contrast"] <- name
     }
 
     # Now merge the dataframes vertically
-    contrastObj <- dplyr::bind_rows(contrastObj)
+    DGEdata <- dplyr::bind_rows(DGEdata)
 
-    return(contrastObj)
+    return(DGEdata)
 }

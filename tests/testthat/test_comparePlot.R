@@ -4,9 +4,9 @@ context("DGEtools - tests for comparePlot.R functions")
 test_that("comparePlot.R: comparePlot()", {
     suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
 
-    ttList <- getType(t_obj1, "topTable")[1:2]
+    contrastList <- getType(t_obj1, "topTable")[1:2]
     # Capture the default logFC and P.Value
-    compareDat <- comparePrep(ttList)
+    compareDat <- comparePrep(contrastList)
 
     # Draw the plot
     cPlot <- comparePlot(compareDat)
@@ -40,18 +40,18 @@ test_that("comparePlot.R: comparePlot()", {
 test_that("comparePlot.R: comparePrep()", {
     suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
 
-    ttList <- getType(t_obj1, "topTable")[1:2]
+    contrastList <- getType(t_obj1, "topTable")[1:2]
     # Capture the default logFC and P.Value
-    compareDat <- comparePrep(ttList)
+    compareDat <- comparePrep(contrastList)
     expect_s3_class(compareDat,"data.frame")
 
-    expect_error(comparePrep(ttList[[1]]),
-                 regexp = "ttList must be a named list of length 2 where both items are of class 'data.frame'.")
-    expect_error(comparePrep(ttList, valueCol = "P.val"),
-                 regexp = "The valueCol must be included in the colnames of both items of ttList.")
-    expect_error(comparePrep(ttList, significanceCol = "P.val"),
-                 regexp = "The significanceCol must be included in the colnames of both items of ttList.")
-    ttList_uncommon_ids <- list("BMTL" = ttList$BMTL[1:10,], "BMTH" = ttList$BMTH[21:30,])
-    expect_error(comparePrep(ttList_uncommon_ids),
-                 regexp = "No common gene IDs were found between the two dataframes in ttList.")
+    expect_error(comparePrep(contrastList[[1]]),
+                 regexp = "contrastList must be a named list of length 2 where both items are of class 'data.frame'.")
+    expect_error(comparePrep(contrastList, valueCol = "P.val"),
+                 regexp = "The valueCol must be included in the colnames of both items of contrastList.")
+    expect_error(comparePrep(contrastList, significanceCol = "P.val"),
+                 regexp = "The significanceCol must be included in the colnames of both items of contrastList.")
+    contrastList_uncommon_ids <- list("BMTL" = contrastList$BMTL[1:10,], "BMTH" = contrastList$BMTH[21:30,])
+    expect_error(comparePrep(contrastList_uncommon_ids),
+                 regexp = "No common gene IDs were found between the two dataframes in contrastList.")
 })

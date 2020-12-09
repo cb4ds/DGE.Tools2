@@ -2,12 +2,12 @@
 % Please edit documentation in R/comparePlot.R
 \name{comparePrep}
 \alias{comparePrep}
-\title{Create a df to use with comparePlot from topTable dfs}
+\title{Create a data.frame to use with comparePlot from topTable data.frames}
 \usage{
-comparePrep(ttList, valueCol = "logFC", significanceCol = "P.Value")
+comparePrep(contrastList, valueCol = "logFC", significanceCol = "P.Value")
 }
 \arguments{
-\item{ttList}{A named list of 2 topTable dataframes (Required). The
+\item{contrastList}{A named list of 2 topTable dataframes (Required). The
 names are used as column names for the value columns in the output.}
 
 \item{valueCol}{Name of column containing values to plot (Default = "logFC")}
@@ -29,13 +29,13 @@ gene IDs as rownames.
 \examples{
 \dontrun{
   # Retrieve the 1st two contrasts from a DGEobj
-  ttList <- getType(dgeObj, "topTable")[1:2]
+  contrastList <- getType(dgeObj, "topTable")[1:2]
 
   # Capture the default logFC and P.Value
-  compareDat <- comparePrep(ttList)
+  compareDat <- comparePrep(contrastList)
 
   # Switch to an FDR value for the significance measure
-  compareDat <- comparePrep(ttList, significanceCol="adj.P.Val")
+  compareDat <- comparePrep(contrastList, significanceCol="adj.P.Val")
 
   # Draw the plot
   cPlot <- comparePlot(compareDat)

@@ -13,7 +13,7 @@ test_that("plotNorm.R: plotNorm()", {
 
     # testing assert statements
     expect_error(plotNorm(NULL),
-                 regexp = "dat must be of either class 'matrix' or 'DGEobj'.")
+                 regexp = "DGEdata must be of either class 'matrix' or 'DGEobj'.")
     expect_error(plotNorm(t_obj1, plotType = "heatmap"),
                  regexp = "plotType must be one of 'box' or 'density'.")
     expect_error(plotNorm(t_obj1, normalize = "xyz"),

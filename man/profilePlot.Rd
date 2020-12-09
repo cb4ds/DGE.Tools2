@@ -5,7 +5,7 @@
 \title{Plot log intensity versus log ratio}
 \usage{
 profilePlot(
-  df,
+  contrastDF,
   logRatioCol = "logFC",
   logIntCol = "AveExpr",
   pvalCol = "P.Value",
@@ -38,7 +38,7 @@ profilePlot(
 )
 }
 \arguments{
-\item{df}{Dataframe with LogIntensity and LogRatio columns and optionally a p-value or FDR column.}
+\item{contrastDF}{Dataframe with LogIntensity and LogRatio columns and optionally a p-value or FDR column.}
 
 \item{logRatioCol}{Name of the LogRatio column (Default = "logFC")}
 
@@ -48,9 +48,9 @@ profilePlot(
 
 \item{pthreshold}{Used to color points (Default = 0.01)}
 
-\item{geneSymLabels}{Labels for gene symbols in df.}
+\item{geneSymLabels}{Labels for gene symbols in contrastDF.}
 
-\item{geneSymCol}{Name of the gene symbol column in df.  The gene symbol is
+\item{geneSymCol}{Name of the gene symbol column in contrastDF.  The gene symbol is
 not in topTable output by default so the user has to bind this column
 to the dataframe in advance.  Then this column will be used to label
 significantly changed points.}
@@ -164,11 +164,11 @@ Increased, NoChange, Decreased.
 }
 \examples{
 \dontrun{
-   # Simple plot with custom title(df is a topTable dataframe)
-   myPlot <- profilePlot(df, title = "Plot Title")
+   # Simple plot with custom title(contrastDF is a topTable dataframe)
+   myPlot <- profilePlot(contrastDF, title = "Plot Title")
 
    # Some options with a custom datafile
-   myPlot <- profilePlot(df,
+   myPlot <- profilePlot(contrastDF,
                          pthreshold = 0.1,
                          logRatioCol = "Log2ratio",
                          logIntCol = "AverageIntensity",

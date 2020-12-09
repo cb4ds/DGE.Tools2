@@ -5,7 +5,7 @@
 \title{Create volcano plot}
 \usage{
 volcanoPlot(
-  df,
+  contrastDF,
   logRatioCol = "logFC",
   logIntCol = "AveExpr",
   pvalCol = "P.Value",
@@ -36,7 +36,7 @@ volcanoPlot(
 )
 }
 \arguments{
-\item{df}{A dataframe with LogRatio and LogIntensity columns and optionally a
+\item{contrastDF}{A dataframe with LogRatio and LogIntensity columns and optionally a
 p-value or FDR column (typically a topTable dataframe).}
 
 \item{logRatioCol}{Name of the LogRatio column (Default = "logFC")}
@@ -50,7 +50,7 @@ p-value or FDR column (typically a topTable dataframe).}
 \item{geneSymLabels}{A character vector of gene to label (must be the name space of the column
 specified by geneSymCol)}
 
-\item{geneSymCol}{Name of the gene symbol column in df.  The gene symbol is
+\item{geneSymCol}{Name of the gene symbol column in contrastDF.  The gene symbol is
 not in topTable output by default so the user has to bind this column
 to the dataframe in advance.  This column will be used to label
 significantly changed points.}
@@ -155,11 +155,11 @@ Increased, NoChange, Decreased.
 }
 \examples{
 \dontrun{
-   # Simple plot with custom title (df is a topTable dataframe)
-   myPlot <- volcanoPlot(df, title = "Plot Title")
+   # Simple plot with custom title (contrastDF is a topTable dataframe)
+   myPlot <- volcanoPlot(contrastDF, title = "Plot Title")
 
    # Some options with a custom datafile
-   myPlot <- volcanoPlot(df,
+   myPlot <- volcanoPlot(contrastDF,
                          pthreshold = 0.1,
                          logRatioCol = "Log2ratio",
                          logIntCol = "AverageIntensity",

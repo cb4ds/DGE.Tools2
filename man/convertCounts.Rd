@@ -5,7 +5,7 @@
 \title{Convert count matrix to CPM, FPKM, FPK, or TPM}
 \usage{
 convertCounts(
-  counts,
+  countsMatrix,
   unit,
   geneLength,
   log = FALSE,
@@ -14,7 +14,7 @@ convertCounts(
 )
 }
 \arguments{
-\item{counts}{A numeric matrix or dataframe of N genes x M Samples.  All columns
+\item{countsMatrix}{A numeric matrix or dataframe of N genes x M Samples.  All columns
 must be numeric.}
 
 \item{unit}{Required. One of CPM, FPKM, FPK or TPM.}
@@ -43,7 +43,7 @@ for the conversion to TPM which is converted from FPKM using the formula provide
 by [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
 }
 \details{
-geneLength is a vector where length(geneLength) == nrow(counts). If a RSE effectiveLength
+geneLength is a vector where length(geneLength) == nrow(countsMatrix). If a RSE effectiveLength
 matrix is passed as input, rowMeans(effectiveLength) is used (because edgeR functions
 only accept a vector for effectiveLength).
 
