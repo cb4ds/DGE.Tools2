@@ -30,6 +30,7 @@ Imports:
     magrittr (>= 1.5),
     matrixStats,
     stats,
+    statmod,
     stringr,
     tibble,
     tidyr,
