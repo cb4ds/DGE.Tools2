@@ -1,5 +1,4 @@
 require(testthat)
-require(testthat)
 require(stats)
 
 require(DGEobj)

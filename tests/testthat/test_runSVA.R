@@ -5,6 +5,7 @@ test_that("runSVA.R: runSVA()", {
     skip_if(is.null(t_obj1$RG))
 
     dgeObj_sva <- runSVA(dgeObj = t_obj1, designMatrixName = "RG")
+
     expect_s3_class(dgeObj_sva, "DGEobj")
 
     expect_error(runSVA(designMatrixName = "designMatrix"),
